@@ -28,7 +28,6 @@
  * SOFTWARE.
  */
 
-#include "config.h"
 #ifndef hpdftbl_H
 #define    hpdftbl_H
 

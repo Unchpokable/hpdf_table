@@ -37,10 +37,18 @@
 #include <string.h>
 #include <iconv.h>
 #include <hpdf.h>
-#include <libgen.h>
-#include <sys/stat.h>
+
 #include "hpdftbl.h"
 
+#include "config.h"
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <shlwapi.h>
+#else
+#include <sys/stat.h>
+#include <libgen.h>
+#endif
 
 /**
  * @brief Last automatically calculated total height
@@ -67,7 +75,7 @@ hpdftbl_error_handler_t hpdftbl_err_handler = NULL;
 
 typedef struct line_dash_style {
 // From version 2.4.0 when the library changed name to libharu this was also changed to a REAL
-#ifdef HAVE_LIBHARU
+#if defined(HAVE_LIBHARU) || defined(HAVE_LIBHPDF)
     HPDF_REAL dash_ptn[8]; /**< HPDF dash line definition */
 #else
     HPDF_UINT16 dash_ptn[8]; /**< HPDF dash line definition */
@@ -98,6 +106,35 @@ static line_dash_style_t dash_styles[] = {
         {{5, 2, 2, 2, 0, 0, 0, 0}, 4},  /**< Dashed-dot line variant 1 */
         {{7, 3, 3, 3, 0, 0, 0, 0}, 4},  /**< Dashed-dot line variant 2 */
 };
+
+static _Bool hpdftbl_platform_isdir(char* file);
+
+#ifdef _WIN32
+static _Bool hpdftbl_platform_isdir(char* file) {
+    char dbuff[1024];
+    strncpy(dbuff, file, sizeof(dbuff));
+    dbuff[sizeof(dbuff) - 1] = 0;
+
+    PathRemoveFileSpec(dbuff);
+
+    DWORD attrs = GetFileAttributes(dbuff);
+
+    return (attrs != INVALID_FILE_ATTRIBUTES) && (attrs & FILE_ATTRIBUTE_DIRECTORY);
+}
+#else
+
+static _Bool hpdftbl_platform_isdir(char* file) {
+    char dbuff[1024];
+    strncpy(dbuff, file, sizeof(dbuff));
+    dbuff[sizeof(dbuff)-1] = 0;
+    char *dir = dirname(dbuff);
+
+    struct stat sb;
+
+    return stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode);
+}
+
+#endif 
 
 /**
  * @brief Internal helper to set the line style.
@@ -344,8 +381,8 @@ hpdftbl_create_title(size_t rows, size_t cols, char *title) {
     t->cells = calloc(cols * rows, sizeof(hpdftbl_cell_t));
 #endif
     if (t->cells == NULL) {
-        free(t);
         _HPDFTBL_SET_ERR(t, -5, -1, -1);
+        free(t);
         return NULL;
     }
 
@@ -368,9 +405,9 @@ hpdftbl_create_title(size_t rows, size_t cols, char *title) {
     t->col_width_percent = calloc(cols, sizeof(float));
 #endif
     if (t->col_width_percent == NULL) {
+        _HPDFTBL_SET_ERR(t, -5, -1, -1);
         free(t->cells);
         free(t);
-        _HPDFTBL_SET_ERR(t, -5, -1, -1);
         return NULL;
     }
 
@@ -383,10 +420,10 @@ hpdftbl_create_title(size_t rows, size_t cols, char *title) {
     if (title) {
         t->title_txt = strdup(title);
         if (t->title_txt == NULL) {
+            _HPDFTBL_SET_ERR(t, -5, -1, -1);
             free(t->col_width_percent);
             free(t->cells);
             free(t);
-            _HPDFTBL_SET_ERR(t, -5, -1, -1);
             return NULL;
         }
     }
@@ -1883,19 +1920,15 @@ int
 hpdftbl_stroke_pdfdoc(HPDF_Doc pdf_doc, char *file) {
     if( strnlen(file, 1024) >= 1024 )
         return -1;
-    struct stat sb;
-    char dbuff[1024];
-    strncpy(dbuff, file, sizeof dbuff);
-    dbuff[sizeof(dbuff)-1] = 0;
-    char *dir = dirname(dbuff);
-    if (stat(dir, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-        if (HPDF_OK != HPDF_SaveToFile(pdf_doc, file)) {
+
+    if(hpdftbl_platform_isdir(file)) {
+        if(HPDF_OK != HPDF_SaveToFile(pdf_doc, file)) {
             return -1;
         }
         return 0;
-    } else {
-        return -1;
-    }
+    } 
+
+    return -1;
 }
 
 

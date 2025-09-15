@@ -7,10 +7,6 @@ AUTOMAKE_OPTIONS = foreign
 # Structure 
 SUBDIRS = . src docs
 
-if WITH_EXAMPLES
-   SUBDIRS += examples
-endif
-
 
 # Additional clean up files
 DISTCLEANFILES=.dep.inc

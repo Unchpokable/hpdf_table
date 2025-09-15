@@ -28,8 +28,6 @@
 #include <string.h>
 #include <iconv.h>
 #include <hpdf.h>
-#include <libgen.h>
-#include <sys/stat.h>
 
 #include <dlfcn.h>
 
