@@ -267,11 +267,6 @@ hpdftbl_dumps(hpdftbl_t tbl, char *buff, size_t buffsize) {
     tab -= 2;
     OUTJSON_ENDLIST(',');
 
-    OUTJSON_STRSTR("label_dyncb", tbl->label_dyncb);
-    OUTJSON_STRSTR("content_dyncb", tbl->content_dyncb);
-    OUTJSON_STRSTR("content_style_dyncb", tbl->content_style_dyncb);
-    OUTJSON_STRSTR("canvas_dyncb", tbl->canvas_dyncb);
-    OUTJSON_STRSTR("post_dyncb", tbl->post_dyncb);
     OUTJSON_STRLIST("cells");
 
     hpdftbl_cell_t *cell = tbl->cells;
@@ -291,10 +286,6 @@ hpdftbl_dumps(hpdftbl_t tbl, char *buff, size_t buffsize) {
             OUTJSON_STRREAL("delta_x", cell->delta_x, ',');
             OUTJSON_STRREAL("delta_y", cell->delta_y, ',');
             OUTJSON_STRREAL("textwidth", cell->textwidth, ',');
-            OUTJSON_STRSTR("content_dyncb", cell->content_dyncb);
-            OUTJSON_STRSTR("label_dyncb", cell->label_dyncb);
-            OUTJSON_STRSTR("content_style_dyncb", cell->content_style_dyncb);
-            OUTJSON_STRSTR("canvas_dyncb", cell->canvas_dyncb);
             if (cell->parent_cell != NULL) {
                 OUTJSON_STRBLK("parent");
                 tab += 2;

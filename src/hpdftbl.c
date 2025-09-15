@@ -763,14 +763,6 @@ cell_destroy(hpdftbl_t t, size_t r, size_t c) {
         free(cell->label);
     if (cell->content)
         free(cell->content);
-    if (cell->content_dyncb)
-        free(cell->content_dyncb);
-    if (cell->content_style_dyncb)
-        free(cell->content_style_dyncb);
-    if (cell->label_dyncb)
-        free(cell->label_dyncb);
-    if (cell->canvas_dyncb)
-        free(cell->canvas_dyncb);
     cell->parent_cell = NULL;
     return 0;
 }
@@ -788,16 +780,6 @@ hpdftbl_destroy(hpdftbl_t t) {
     _HPDFTBL_CHK_TABLE(t);
     if (t->title_txt)
         free(t->title_txt);
-    if (t->label_dyncb)
-        free(t->label_dyncb);
-    if (t->content_dyncb)
-        free(t->content_dyncb);
-    if (t->content_style_dyncb)
-        free(t->content_style_dyncb);
-    if (t->post_dyncb)
-        free(t->post_dyncb);
-    if (t->canvas_dyncb)
-        free(t->canvas_dyncb);
     free(t->col_width_percent);
     for (size_t r = 0; r < t->rows; r++) {
         for (size_t c = 0; c < t->cols; c++) {

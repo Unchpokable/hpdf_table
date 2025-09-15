@@ -267,7 +267,6 @@ extern char hpdftbl_err_extrainfo[];
  * @brief Set optional extra info at error state. (Currently only used by the late binding setting
  * callback functions)
  * @param info Extra info that can be set by a function at a state of error
- * @see hpdftbl_set_label_dyncb(),hpdftbl_set_content_dyncb()
  */
 #define _HPDFTBL_SET_ERR_EXTRA(info) do {strncpy(hpdftbl_err_extrainfo,info,1023);hpdftbl_err_extrainfo[1023]=0;} while(0)
 
@@ -429,20 +428,12 @@ struct hpdftbl_cell {
     HPDF_REAL textwidth;
     /** Content callback. If this is specified then this will override any content callback specified for the table */
     hpdftbl_content_callback_t content_cb;
-    /** Cell content dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *content_dyncb;
     /** Label callback. If this is specified then this will override any content callback specified for the table */
     hpdftbl_content_callback_t label_cb;
-    /** Cell label dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *label_dyncb;
     /** Style for content callback. If this is specified then this will override any style content callback specified for the table */
     hpdftbl_content_style_callback_t style_cb;
-    /** Cell content style dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *content_style_dyncb;
     /** Canvas callback. If this is specified then this will override any canvas callback specified for the table  */
     hpdftbl_canvas_callback_t canvas_cb;
-    /** Cell canvas dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *canvas_dyncb;
     /** The style of the text content. If a style callback is specified the callback will override this setting */
     hpdf_text_style_t content_style;
     /** Parent cell. If this cell is part of another cells row or column spanning this is a reference to this parent cell.
@@ -509,27 +500,17 @@ struct hpdftbl {
     hpdf_text_style_t content_style;
     /** Table content callback. Will be called for each cell unless the cella has its own content callback */
     hpdftbl_content_callback_t label_cb;
-    /** Table label dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *label_dyncb;
     /** Table content callback. Will be called for each cell unless the cell has its own content callback */
     hpdftbl_content_callback_t content_cb;
-    /** Table content dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *content_dyncb;
     /** Style for content callback. Will be called for each cell unless the cell has its own content style callback */
     hpdftbl_content_style_callback_t content_style_cb;
-    /** Table content style dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *content_style_dyncb;
     /** Table canvas callback. Will be called for each cell unless the cell has its own canvas callback  */
     hpdftbl_canvas_callback_t canvas_cb;
-    /** Table canvas dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *canvas_dyncb;
     /** Post table creation callback. This is an opportunity for a client to do any special
      * table manipulation before the table is stroked to the page. A reference to the table
      * will be passed on in the callback.
      */
     hpdftbl_callback_t post_cb;
-    /** Table post dynamic callback name. The name is created vi `strdup()` and must be freed on destruction */
-    char *post_dyncb;
     /** Table outer border settings */
     hpdftbl_grid_style_t outer_grid;
     /** Table inner vertical border settings, if width>0 this takes precedence over the generic inner border */
@@ -885,38 +866,6 @@ hpdftbl_set_cell_content_style_cb(hpdftbl_t t, size_t r, size_t c, hpdftbl_conte
 int
 hpdftbl_set_post_cb(hpdftbl_t t, hpdftbl_callback_t cb);
 
-/*
- * Table dynamic callback functions
- */
-void
-hpdftbl_set_dlhandle(void *);
-
-int
-hpdftbl_set_content_dyncb(hpdftbl_t, const char *);
-
-int
-hpdftbl_set_canvas_dyncb(hpdftbl_t, const char *);
-
-int
-hpdftbl_set_cell_content_dyncb(hpdftbl_t, size_t, size_t, const char *);
-
-int
-hpdftbl_set_label_dyncb(hpdftbl_t, const char *);
-
-int
-hpdftbl_set_cell_label_dyncb(hpdftbl_t, size_t, size_t, const char *);
-
-int
-hpdftbl_set_content_style_dyncb(hpdftbl_t, const char *);
-
-int
-hpdftbl_set_cell_content_style_dyncb(hpdftbl_t, size_t, size_t, const char *);
-
-int
-hpdftbl_set_cell_canvas_dyncb(hpdftbl_t, size_t, size_t, const char *);
-
-int
-hpdftbl_set_post_dyncb(hpdftbl_t t, const char *cb_name);
 
 /*
  * Text encoding

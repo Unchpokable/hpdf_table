@@ -421,11 +421,6 @@ hpdftbl_loads(hpdftbl_t tbl, char *buff) {
             t->col_width_percent = calloc(t->cols, sizeof(float));
             GETJSON_REALARRAY(table, "col_width_percent", t->col_width_percent);
 
-            GETJSON_DYNCB(table, label_dyncb);
-            GETJSON_DYNCB(table, content_dyncb);
-            GETJSON_DYNCB(table, post_dyncb);
-            GETJSON_DYNCB(table, canvas_dyncb);
-            GETJSON_DYNCB(table, content_style_dyncb);
 
             t->cells = calloc(t->cols * t->rows, sizeof(hpdftbl_cell_t));
             size_t idx;
@@ -445,10 +440,6 @@ hpdftbl_loads(hpdftbl_t tbl, char *buff) {
                     GETJSON_REAL(obj, "delta_y", t->cells[idx].delta_y);
                     GETJSON_REAL(obj, "textwidth", t->cells[idx].textwidth);
 
-                    GETJSON_CELLDYNCB(obj, content_dyncb, t->cells[idx].row, t->cells[idx].col);
-                    GETJSON_CELLDYNCB(obj, label_dyncb, t->cells[idx].row, t->cells[idx].col);
-                    GETJSON_CELLDYNCB(obj, content_style_dyncb, t->cells[idx].row, t->cells[idx].col);
-                    GETJSON_CELLDYNCB(obj, canvas_dyncb, t->cells[idx].row, t->cells[idx].col);
 
                     GETJSON_CELLTXTSTYLE(obj, content_style, t->cells[idx].row, t->cells[idx].col);
 
