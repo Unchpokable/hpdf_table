@@ -48,7 +48,8 @@ docs/out
 scripts/docupload.sh
 *.yaml
 *.json
-
-
+build/*
+buiid/
+examples/
 
 
