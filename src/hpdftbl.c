@@ -74,12 +74,7 @@ hpdftbl_error_handler_t hpdftbl_err_handler = NULL;
  */
 
 typedef struct line_dash_style {
-// From version 2.4.0 when the library changed name to libharu this was also changed to a REAL
-#if defined(HAVE_LIBHARU) || defined(HAVE_LIBHPDF)
     HPDF_REAL dash_ptn[8]; /**< HPDF dash line definition */
-#else
-    HPDF_UINT16 dash_ptn[8]; /**< HPDF dash line definition */
-#endif
     size_t num;              /**< Number of segments in the dashed line */
 } line_dash_style_t;
 

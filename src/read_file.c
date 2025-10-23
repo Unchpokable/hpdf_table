@@ -38,6 +38,9 @@
  * @param filename Name of file to read from
  * @return -1 on failure, 0 on success
  */
+
+#define LINE_SIZE 1024
+
 int
 hpdftbl_read_file(char *buff, size_t buffsize, char *filename) {
     FILE *fh = fopen(filename, "r");
@@ -45,10 +48,9 @@ hpdftbl_read_file(char *buff, size_t buffsize, char *filename) {
         return -1;
     }
 
-    const int linesize = 1024;
-    char line[linesize];
+    char line[LINE_SIZE];
 
-    while (fgets(line, linesize, fh) != NULL) {
+    while (fgets(line, LINE_SIZE, fh) != NULL) {
         if (xstrlcat(buff, line, buffsize) >= buffsize) {
             // Truncation error
             fclose(fh);

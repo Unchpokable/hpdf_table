@@ -41,6 +41,7 @@
 #include <hpdf.h>
 #include "hpdftbl.h"
 
+#define HAVE_LIBJANSSON
 #ifdef HAVE_LIBJANSSON
 
 #include <jansson.h>

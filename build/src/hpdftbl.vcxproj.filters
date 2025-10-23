@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_callback.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_errstr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_grid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_theme.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_widget.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\read_file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\xstr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_dump.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\hpdftbl_load.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\DEACMM-PC\source\repos\hpdf_table\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C2FB8D6E-8E41-3B4B-99CC-144709C8E186}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
