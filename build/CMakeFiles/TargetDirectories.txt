@@ -1,3 +1,0 @@
-C:/Users/DEACMM-PC/source/repos/hpdf_table/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/DEACMM-PC/source/repos/hpdf_table/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/DEACMM-PC/source/repos/hpdf_table/build/src/CMakeFiles/hpdftbl.dir
