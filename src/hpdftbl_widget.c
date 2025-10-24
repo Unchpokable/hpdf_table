@@ -75,7 +75,7 @@ hpdftbl_table_widget_letter_buttons(HPDF_Doc doc, HPDF_Page page,
                                     const HPDF_RGBColor on_color, const HPDF_RGBColor off_color,
                                     const HPDF_RGBColor on_background, const HPDF_RGBColor off_background,
                                     const HPDF_REAL fsize,
-                                    const char *letters, _Bool *state ) {
+                                    const char *letters, int *state ) {
 
     // Text colors
     const size_t num=strlen(letters);
@@ -137,7 +137,7 @@ hpdftbl_table_widget_letter_buttons(HPDF_Doc doc, HPDF_Page page,
  */
 void
 hpdftbl_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
-                            HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height, _Bool state) {
+                            HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height, int state) {
 
     const HPDF_RGBColor red = HPDF_COLOR_FROMRGB(210,42,0);
     const HPDF_RGBColor green = HPDF_COLOR_FROMRGB(60,179,113);
@@ -237,7 +237,7 @@ hpdftbl_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
 void
 hpdftbl_widget_hbar(const HPDF_Doc doc, const HPDF_Page page,
                     const HPDF_REAL xpos, const HPDF_REAL ypos, const HPDF_REAL width, const HPDF_REAL height,
-                    const HPDF_RGBColor color, const float val, const _Bool hide_val) {
+                    const HPDF_RGBColor color, const float val, const int hide_val) {
 
     const HPDF_RGBColor graph_border_color = HPDF_COLOR_FROMRGB(128,128,128);
     const HPDF_RGBColor graph_text_color = HPDF_COLOR_FROMRGB(90,90,90);
@@ -298,7 +298,7 @@ void
 hpdftbl_widget_segment_hbar(const HPDF_Doc doc, const HPDF_Page page,
                             const HPDF_REAL xpos, const HPDF_REAL ypos, const HPDF_REAL width, const HPDF_REAL height,
                             const size_t num_segments, const HPDF_RGBColor on_color, const double val_percent,
-                            const _Bool hide_val) {
+                            const int hide_val) {
 
     double _val_percent =0;
     if( val_percent <= 1.0 && val_percent >= 0 ) {

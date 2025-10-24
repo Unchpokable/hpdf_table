@@ -102,10 +102,10 @@ static line_dash_style_t dash_styles[] = {
         {{7, 3, 3, 3, 0, 0, 0, 0}, 4},  /**< Dashed-dot line variant 2 */
 };
 
-static _Bool hpdftbl_platform_isdir(char* file);
+static int hpdftbl_platform_isdir(char* file);
 
 #ifdef _WIN32
-static _Bool hpdftbl_platform_isdir(char* file) {
+static int hpdftbl_platform_isdir(char* file) {
     char dbuff[1024];
     strncpy(dbuff, file, sizeof(dbuff));
     dbuff[sizeof(dbuff) - 1] = 0;
@@ -118,7 +118,7 @@ static _Bool hpdftbl_platform_isdir(char* file) {
 }
 #else
 
-static _Bool hpdftbl_platform_isdir(char* file) {
+static int hpdftbl_platform_isdir(char* file) {
     char dbuff[1024];
     strncpy(dbuff, file, sizeof(dbuff));
     dbuff[sizeof(dbuff)-1] = 0;
@@ -164,7 +164,7 @@ hpdftbl_set_line_dash(hpdftbl_t t, hpdftbl_line_dashstyle_t style) {
  * @param anchor Set to TRUE to use top left as anchor, FALSE for bottom left
  */
 void
-hpdftbl_set_anchor_top_left(hpdftbl_t tbl, const _Bool anchor) {
+hpdftbl_set_anchor_top_left(hpdftbl_t tbl, const int anchor) {
     tbl->anchor_is_top_left = anchor;
 }
 
@@ -178,7 +178,7 @@ hpdftbl_set_anchor_top_left(hpdftbl_t tbl, const _Bool anchor) {
  * @see hpdftbl_set_anchor_top_left
  * @return TRUE if anchor is top left, FALSE otherwise
  */
-_Bool
+int
 hpdftbl_get_anchor_top_left(hpdftbl_t tbl) {
     return tbl->anchor_is_top_left;
 }
@@ -585,7 +585,7 @@ hpdftbl_set_inner_tgrid_style(hpdftbl_t t, HPDF_REAL width, HPDF_RGBColor color,
  * @return 0 on successes -1 on failure
  */
 int
-hpdftbl_set_zebra(hpdftbl_t t, _Bool use, int phase) {
+hpdftbl_set_zebra(hpdftbl_t t, int use, int phase) {
     t->use_zebra = use;
     t->zebra_phase = phase;
     return 0;
@@ -675,7 +675,7 @@ hpdftbl_set_header_halign(hpdftbl_t t, hpdftbl_text_align_t align) {
  * @see hpdftbl_set_header_style()
  */
 int
-hpdftbl_use_header(hpdftbl_t t, _Bool use) {
+hpdftbl_use_header(hpdftbl_t t, int use) {
     _HPDFTBL_CHK_TABLE(t);
     t->use_header_row = use;
     return 0;
@@ -695,7 +695,7 @@ hpdftbl_use_header(hpdftbl_t t, _Bool use) {
  * @see hpdftbl_use_labelgrid()
  */
 int
-hpdftbl_use_labels(hpdftbl_t t, _Bool use) {
+hpdftbl_use_labels(hpdftbl_t t, int use) {
     _HPDFTBL_CHK_TABLE(t);
     t->use_cell_labels = use;
     t->use_label_grid_style = use;
@@ -716,7 +716,7 @@ hpdftbl_use_labels(hpdftbl_t t, _Bool use) {
  * @see hpdftbl_use_labels()
  */
 int
-hpdftbl_use_labelgrid(hpdftbl_t t, _Bool use) {
+hpdftbl_use_labelgrid(hpdftbl_t t, int use) {
     _HPDFTBL_CHK_TABLE(t);
     t->use_label_grid_style = use;
     return 0;
@@ -795,7 +795,7 @@ hpdftbl_destroy(hpdftbl_t t) {
  * @param c Column
  * @return TRUE if within bounds, FALSE otherwise
  */
-_Bool
+int
 chktbl(hpdftbl_t t, size_t r, size_t c) {
     if (r < t->rows && c < t->cols)
         return TRUE;

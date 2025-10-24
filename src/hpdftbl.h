@@ -34,7 +34,6 @@
 #ifdef    __cplusplus
 // in case we have C++ code, we should use its' types and logic
 #include <algorithm>
-typedef std::_Bool _Bool;
 #endif
 
 #ifdef    __cplusplus
@@ -348,7 +347,7 @@ typedef void (*hpdftbl_canvas_callback_t)(HPDF_Doc, HPDF_Page, void *, size_t, s
  * @see hpdftbl_set_content_style_cb()
  *
  */
-typedef _Bool (*hpdftbl_content_style_callback_t)(void *, size_t, size_t, char *content, hpdf_text_style_t *);
+typedef int (*hpdftbl_content_style_callback_t)(void *, size_t, size_t, char *content, hpdf_text_style_t *);
 
 
 /**
@@ -475,7 +474,7 @@ struct hpdftbl {
     /** Minimum table row height. If specified as 0 it has no effect */
     HPDF_REAL minrowheight;
     /** Is the table anchor to be upper top left or bottom left */
-    _Bool anchor_is_top_left;
+    int anchor_is_top_left;
     /** The content text bottom margin as a factor of the fontsize */
     HPDF_REAL bottom_vmargin_factor;
     /** Table width */
@@ -489,13 +488,13 @@ struct hpdftbl {
     /** Header style  */
     hpdf_text_style_t header_style;
     /** Flag to determine if the first row in the table should be formatted as a header row */
-    _Bool use_header_row;
+    int use_header_row;
     /** Label style settings */
     hpdf_text_style_t label_style;
     /** Flag to determine if cell labels should be used */
-    _Bool use_cell_labels;
+    int use_cell_labels;
     /** Flag to determine of the short vertical label border should be used. Default is to use half grid. */
-    _Bool use_label_grid_style;
+    int use_label_grid_style;
     /** Content style */
     hpdf_text_style_t content_style;
     /** Table content callback. Will be called for each cell unless the cella has its own content callback */
@@ -522,7 +521,7 @@ struct hpdftbl {
     /** Use alternating background color on every second line TRUE or FALSE. Defaults to FALSE.
      * @see hpdftbl_set_zebra()
      */
-    _Bool use_zebra;
+    int use_zebra;
     /** Determine if we start with color1 (phase=0) or start with color2 (phase=1)
      * @see hpdftbl_set_zebra()
      */
@@ -577,11 +576,11 @@ typedef struct hpdftbl_spec {
     /** Table title */
     char *title;
     /** Use a header for the table */
-    _Bool use_header;
+    int use_header;
     /** Use labels in table */
-    _Bool use_labels;
+    int use_labels;
     /** Use label grid in table */
-    _Bool use_labelgrid;
+    int use_labelgrid;
     /** Number of rows in the table */
     size_t rows;
     /** Number of columns in the table */
@@ -624,11 +623,11 @@ typedef struct hpdftbl_theme {
     /** Table outer border style */
     hpdftbl_grid_style_t outer_border;
     /** Flag if cell labels should be used  */
-    _Bool use_labels;
+    int use_labels;
     /** Flag if the special short vertical grid style for labels should be used  */
-    _Bool use_label_grid_style;
+    int use_label_grid_style;
     /** Flag if header row should be used */
-    _Bool use_header_row;
+    int use_header_row;
     /** Table inner vertical border settings, if width>0 this takes precedence over the generic inner border */
     hpdftbl_grid_style_t inner_vborder;
     /** Table inner horizontal border settings, if width>0 this takes precedence over the generic inner border */
@@ -636,7 +635,7 @@ typedef struct hpdftbl_theme {
     /** Table inner horizontal top border settings, if width>0 this takes precedence over the generic horizontal and inner horizontal border */
     hpdftbl_grid_style_t inner_tborder;
     /** Use alternating background color on every second line TRUE or FALSE. Defaults to FALSE. */
-    _Bool use_zebra;
+    int use_zebra;
     /** Start with color1 or color2 */
     int zebra_phase;
     /** First zebra color. */
@@ -692,9 +691,9 @@ int
 hpdftbl_get_last_auto_height(HPDF_REAL *height);
 
 void
-hpdftbl_set_anchor_top_left(hpdftbl_t tbl, _Bool anchor);
+hpdftbl_set_anchor_top_left(hpdftbl_t tbl, int anchor);
 
-_Bool
+int
 hpdftbl_get_anchor_top_left(hpdftbl_t tbl);
 
 /*
@@ -756,16 +755,16 @@ hpdftbl_set_cellspan(hpdftbl_t t, size_t r, size_t c, size_t rowspan, size_t col
  * Table style handling functions
  */
 int
-hpdftbl_set_zebra(hpdftbl_t t, _Bool use, int phase);
+hpdftbl_set_zebra(hpdftbl_t t, int use, int phase);
 
 int
 hpdftbl_set_zebra_color(hpdftbl_t t, HPDF_RGBColor z1,  HPDF_RGBColor z2);
 
 int
-hpdftbl_use_labels(hpdftbl_t t, _Bool use);
+hpdftbl_use_labels(hpdftbl_t t, int use);
 
 int
-hpdftbl_use_labelgrid(hpdftbl_t t, _Bool use);
+hpdftbl_use_labelgrid(hpdftbl_t t, int use);
 
 int
 hpdftbl_set_background(hpdftbl_t t, HPDF_RGBColor background);
@@ -792,7 +791,7 @@ int
 hpdftbl_set_header_halign(hpdftbl_t t, hpdftbl_text_align_t align);
 
 int
-hpdftbl_use_header(hpdftbl_t t, _Bool use);
+hpdftbl_use_header(hpdftbl_t t, int use);
 
 int
 hpdftbl_set_label_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
@@ -893,22 +892,22 @@ hpdftbl_table_widget_letter_buttons(HPDF_Doc doc, HPDF_Page page,
                                     HPDF_RGBColor on_color, HPDF_RGBColor off_color,
                                     HPDF_RGBColor on_background, HPDF_RGBColor off_background,
                                     HPDF_REAL fsize,
-                                    const char *letters, _Bool *state);
+                                    const char *letters, int *state);
 
 void
 hpdftbl_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
-                            HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height, _Bool state);
+                            HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height, int state);
 
 void
 hpdftbl_widget_hbar(HPDF_Doc doc, HPDF_Page page,
                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height,
-                    HPDF_RGBColor color, float val, _Bool hide_val);
+                    HPDF_RGBColor color, float val, int hide_val);
 
 void
 hpdftbl_widget_segment_hbar(HPDF_Doc doc, HPDF_Page page,
                             HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height,
                             size_t num_segments, HPDF_RGBColor on_color, double val_percent,
-                            _Bool hide_val);
+                            int hide_val);
 
 void
 hpdftbl_widget_strength_meter(HPDF_Doc doc, HPDF_Page page,
@@ -958,7 +957,7 @@ hpdftbl_read_file(char *buff, size_t buffsize, char *filename);
 /*
  * Internal functions
  */
-_Bool
+int
 chktbl(hpdftbl_t, size_t, size_t);
 
 #ifdef    __cplusplus

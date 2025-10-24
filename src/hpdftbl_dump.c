@@ -69,7 +69,7 @@
 #define OUTJSON_ENDLIST(e)  do { jsonprint( "\n%*s]%c\n",tab,"",e); } while(0)
 #define OUTJSON_STARTBLK()  do { jsonprint( "%*s{\n",tab,""); } while(0)
 #define OUTJSON_ENDBLK(c)  do { jsonprint( "%*s}%c\n",tab,"",c); } while(0)
-#define OUTJSON_BOOL(k, v)  do { if(v) { jsonprint( "%*s\"%s\": true,\n",tab,"",k);} else { jsonprint( "%*s\"%s\": false,\n",tab,"",k);} } while(0)
+#define OUTJSONint(k, v)  do { if(v) { jsonprint( "%*s\"%s\": true,\n",tab,"",k);} else { jsonprint( "%*s\"%s\": false,\n",tab,"",k);} } while(0)
 #define OUTJSON_RGB(k, v)  do { jsonprint( "%*s\"%s\": [%.5f, %.5f, %.5f],\n",tab,"",k,v.r,v.g,v.b); } while(0)
 
 #define OUTJSON_GRID(k, v)  do { \
@@ -137,7 +137,7 @@ hpdftbl_theme_dumps(hpdftbl_theme_t *theme, char *buff, const size_t buffsize) {
     char ob[1024];
     int tab = 0;
     char _sbuff_[1024];
-    _Bool _string_ = TRUE;
+    int _string_ = TRUE;
     char *_jsonbuff_ = buff;
     const size_t _jsonbuff_size_ = buffsize;
 
@@ -220,7 +220,7 @@ hpdftbl_dumps(hpdftbl_t tbl, char *buff, size_t buffsize) {
     char ob[1024];
     int tab = 0;
     char _sbuff_[1024];
-    _Bool _string_ = TRUE;
+    int _string_ = TRUE;
     char *_jsonbuff_ = buff;
     FILE *fh = NULL;
     const size_t _jsonbuff_size_ = buffsize;
