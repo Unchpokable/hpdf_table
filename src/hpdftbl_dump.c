@@ -69,7 +69,7 @@
 #define OUTJSON_ENDLIST(e)  do { jsonprint( "\n%*s]%c\n",tab,"",e); } while(0)
 #define OUTJSON_STARTBLK()  do { jsonprint( "%*s{\n",tab,""); } while(0)
 #define OUTJSON_ENDBLK(c)  do { jsonprint( "%*s}%c\n",tab,"",c); } while(0)
-#define OUTJSONint(k, v)  do { if(v) { jsonprint( "%*s\"%s\": true,\n",tab,"",k);} else { jsonprint( "%*s\"%s\": false,\n",tab,"",k);} } while(0)
+#define OUTJSON_BOOL(k, v)  do { if(v) { jsonprint( "%*s\"%s\": true,\n",tab,"",k);} else { jsonprint( "%*s\"%s\": false,\n",tab,"",k);} } while(0)
 #define OUTJSON_RGB(k, v)  do { jsonprint( "%*s\"%s\": [%.5f, %.5f, %.5f],\n",tab,"",k,v.r,v.g,v.b); } while(0)
 
 #define OUTJSON_GRID(k, v)  do { \
