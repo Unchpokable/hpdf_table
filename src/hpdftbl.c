@@ -58,12 +58,12 @@ static HPDF_REAL last_auto_height;
 /**
  * @brief Internal state variable to keep track of necessary encodings
  */
-static char *target_encoding = HPDFTBL_DEFAULT_TARGET_ENCODING;
+static const char *target_encoding = HPDFTBL_DEFAULT_TARGET_ENCODING;
 
 /**
  * @brief Internal state variable to keep track of necessary encodings
  */
-static char *source_encoding = HPDFTBL_DEFAULT_SOURCE_ENCODING;
+static const char *source_encoding = HPDFTBL_DEFAULT_SOURCE_ENCODING;
 
 /** @brief This stores a pointer to the function acting as the error handler callback */
 hpdftbl_error_handler_t hpdftbl_err_handler = NULL;
@@ -102,10 +102,10 @@ static line_dash_style_t dash_styles[] = {
         {{7, 3, 3, 3, 0, 0, 0, 0}, 4},  /**< Dashed-dot line variant 2 */
 };
 
-static int hpdftbl_platform_isdir(char* file);
+static int hpdftbl_platform_isdir(const char* file);
 
 #ifdef _WIN32
-static int hpdftbl_platform_isdir(char* file) {
+static int hpdftbl_platform_isdir(const char* file) {
     char dbuff[1024];
     strncpy(dbuff, file, sizeof(dbuff));
     dbuff[sizeof(dbuff) - 1] = 0;
@@ -118,7 +118,7 @@ static int hpdftbl_platform_isdir(char* file) {
 }
 #else
 
-static int hpdftbl_platform_isdir(char* file) {
+static int hpdftbl_platform_isdir(const char* file) {
     char dbuff[1024];
     strncpy(dbuff, file, sizeof(dbuff));
     dbuff[sizeof(dbuff)-1] = 0;
@@ -201,7 +201,7 @@ hpdftbl_get_anchor_top_left(hpdftbl_t tbl) {
  * strings in the source specified in.
  */
 void
-hpdftbl_set_text_encoding(char *target, char *source) {
+hpdftbl_set_text_encoding(const char *target, const char *source) {
     target_encoding = target;
     source_encoding = source;
 }
@@ -218,18 +218,20 @@ hpdftbl_set_text_encoding(char *target, char *source) {
  * @return 0 on success, -1 otherwise
  */
 static int
-do_encoding(char *input, char *output, const size_t out_len) {
+do_encoding(const char *input, char *output, const size_t out_len) {
     char *out_buf = &output[0];
-    char *in_buf = &input[0];
+    const char *in_ptr = input;
     size_t out_left = out_len - 1;
     size_t in_left = strlen(input);
     iconv_t cd = iconv_open(target_encoding, source_encoding);
 
     do {
+        char *in_buf = (char *) in_ptr;
         if (iconv(cd, &in_buf, &in_left, &out_buf, &out_left) == (size_t) -1) {
             iconv_close(cd);
             return -1;
         }
+        in_ptr = in_buf;
     } while (in_left > 0 && out_left > 0);
     *out_buf = 0;
 
@@ -249,7 +251,7 @@ do_encoding(char *input, char *output, const size_t out_len) {
  * @return -1 on error, 0 on success
  */
 int
-hpdftbl_encoding_text_out(HPDF_Page page, HPDF_REAL xpos, HPDF_REAL ypos, char *text) {
+hpdftbl_encoding_text_out(HPDF_Page page, HPDF_REAL xpos, HPDF_REAL ypos, const char *text) {
     // Assume that the encoding we are converting to never exceeds three times the
     // original string
 
@@ -355,7 +357,7 @@ hpdftbl_create(size_t rows, size_t cols) {
  * @return A handle to a table, NULL in case of OOM
  */
 hpdftbl_t
-hpdftbl_create_title(size_t rows, size_t cols, char *title) {
+hpdftbl_create_title(size_t rows, size_t cols, const char *title) {
 
     // Initializing to zero means default color is black
 #ifdef __cplusplus
@@ -626,7 +628,7 @@ hpdftbl_set_zebra_color(hpdftbl_t t, HPDF_RGBColor z1,  HPDF_RGBColor z2) {
  */
 
 int
-hpdftbl_set_header_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
+hpdftbl_set_header_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
     _HPDFTBL_CHK_TABLE(t);
     t->header_style.font = font;
     t->header_style.fsize = fsize;
@@ -816,7 +818,7 @@ chktbl(hpdftbl_t t, size_t r, size_t c) {
  * @return -1 on error, 0 if successful
  */
 int
-hpdftbl_set_cell(hpdftbl_t t, size_t r, size_t c, char *label, char *content) {
+hpdftbl_set_cell(hpdftbl_t t, size_t r, size_t c, const char *label, const char *content) {
     _HPDFTBL_CHK_TABLE(t);
     if (!chktbl(t, r, c)) return -1;
     hpdftbl_cell_t *cell = &t->cells[_HPDFTBL_IDX(r, c)];
@@ -926,8 +928,8 @@ hpdftbl_clear_spanning(hpdftbl_t t) {
  * @param color font color
  */
 static void
-set_fontc(hpdftbl_t t, char *fontname, HPDF_REAL fsize, HPDF_RGBColor color) {
-    HPDF_Page_SetFontAndSize(t->pdf_page, HPDF_GetFont(t->pdf_doc, fontname, HPDFTBL_DEFAULT_TARGET_ENCODING), fsize);
+set_fontc(hpdftbl_t t, const char *fontname, HPDF_REAL fsize, HPDF_RGBColor color) {
+    HPDF_Page_SetFontAndSize(t->pdf_page, HPDF_GetFont(t->pdf_doc, fontname, target_encoding), fsize);
     HPDF_Page_SetRGBFill(t->pdf_page, color.r, color.g, color.b);
     HPDF_Page_SetTextRenderingMode(t->pdf_page, HPDF_FILL);
 }
@@ -1021,7 +1023,7 @@ table_title_stroke(hpdftbl_t t) {
  * @see hpdftbl_set_label_cb()
  */
 int
-hpdftbl_set_labels(hpdftbl_t t, char **labels) {
+hpdftbl_set_labels(hpdftbl_t t, const char **labels) {
     _HPDFTBL_CHK_TABLE(t);
     for (size_t r = 0; r < t->rows; r++) {
         for (size_t c = 0; c < t->cols; c++) {
@@ -1059,7 +1061,7 @@ hpdftbl_set_labels(hpdftbl_t t, char **labels) {
  * @see hpdftbl_set_cell_content_callback()
  */
 int
-hpdftbl_set_content(hpdftbl_t t, char **content) {
+hpdftbl_set_content(hpdftbl_t t, const char **content) {
     _HPDFTBL_CHK_TABLE(t);
     for (size_t r = 0; r < t->rows; r++) {
         for (size_t c = 0; c < t->cols; c++) {
@@ -1085,7 +1087,7 @@ hpdftbl_set_content(hpdftbl_t t, char **content) {
  * @return -1 on error, 0 if successful
  */
 int
-hpdftbl_set_label_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
+hpdftbl_set_label_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
     _HPDFTBL_CHK_TABLE(t);
     t->label_style.font = font;
     t->label_style.fsize = fsize;
@@ -1111,7 +1113,7 @@ hpdftbl_set_label_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor 
  * @see hpdftbl_set_cell_content_style_cb()
  */
 int
-hpdftbl_set_content_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
+hpdftbl_set_content_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
     _HPDFTBL_CHK_TABLE(t);
     t->content_style.font = font;
     t->content_style.fsize = fsize;
@@ -1135,7 +1137,7 @@ hpdftbl_set_content_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColo
  * @see hpdftbl_set_cell_content_style_cb()
  */
 int
-hpdftbl_set_row_content_style(hpdftbl_t t, size_t r, char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+hpdftbl_set_row_content_style(hpdftbl_t t, size_t r, const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                               HPDF_RGBColor background) {
     for (size_t c = 0; c < t->cols; c++) {
         hpdftbl_set_cell_content_style(t, r, c, font, fsize, color, background);
@@ -1158,7 +1160,7 @@ hpdftbl_set_row_content_style(hpdftbl_t t, size_t r, char *font, HPDF_REAL fsize
  * @see hpdftbl_set_cell_content_style_cb()
  */
 int
-hpdftbl_set_col_content_style(hpdftbl_t t, size_t c, char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+hpdftbl_set_col_content_style(hpdftbl_t t, size_t c, const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                               HPDF_RGBColor background) {
     for (size_t r = 0; r < t->rows; r++) {
         hpdftbl_set_cell_content_style(t, r, c, font, fsize, color, background);
@@ -1183,7 +1185,7 @@ hpdftbl_set_col_content_style(hpdftbl_t t, size_t c, char *font, HPDF_REAL fsize
  */
 int
 hpdftbl_set_cell_content_style(hpdftbl_t t, size_t r, size_t c,
-                               char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+                               const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                                HPDF_RGBColor background) {
     _HPDFTBL_CHK_TABLE(t);
     chktbl(t, r, c);
@@ -1211,7 +1213,7 @@ hpdftbl_set_cell_content_style(hpdftbl_t t, size_t r, size_t c,
  * @see hpdftbl_set_title_halign()
  */
 int
-hpdftbl_set_title_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
+hpdftbl_set_title_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background) {
     _HPDFTBL_CHK_TABLE(t);
     t->title_style.font = font;
     t->title_style.fsize = fsize;
@@ -1234,7 +1236,7 @@ hpdftbl_set_title_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor 
  * @see hpdftbl_set_title_halign()
  */
 int
-hpdftbl_set_title(hpdftbl_t t, char *title) {
+hpdftbl_set_title(hpdftbl_t t, const char *title) {
     _HPDFTBL_CHK_TABLE(t);
     if (t->title_txt)
         free(t->title_txt);
@@ -1894,7 +1896,7 @@ hpdftbl_stroke(HPDF_Doc pdf,
  * @return 0 on success, -1 on failure
  */
 int
-hpdftbl_stroke_pdfdoc(HPDF_Doc pdf_doc, char *file) {
+hpdftbl_stroke_pdfdoc(HPDF_Doc pdf_doc, const char *file) {
     if( strnlen(file, 1024) >= 1024 )
         return -1;
 

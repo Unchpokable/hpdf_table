@@ -298,7 +298,7 @@ typedef enum hpdftbl_text_align {
  * This structure collects the basic properties for a text string (font, color, background, horizontal alignment)
  */
 typedef struct text_style {
-    char *font;                     /**< Font face name */
+    const char *font;               /**< Font face name */
     HPDF_REAL fsize;                /**< Font size */
     HPDF_RGBColor color;            /**< Font color */
     HPDF_RGBColor background;       /**< Font background color */
@@ -664,7 +664,7 @@ hpdftbl_t
 hpdftbl_create(size_t rows, size_t cols);
 
 hpdftbl_t
-hpdftbl_create_title(size_t rows, size_t cols, char *title);
+hpdftbl_create_title(size_t rows, size_t cols, const char *title);
 
 int
 hpdftbl_stroke(HPDF_Doc pdf,
@@ -785,7 +785,7 @@ int
 hpdftbl_set_outer_grid_style(hpdftbl_t t, HPDF_REAL width, HPDF_RGBColor color, hpdftbl_line_dashstyle_t dashstyle);
 
 int
-hpdftbl_set_header_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
+hpdftbl_set_header_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
 
 int
 hpdftbl_set_header_halign(hpdftbl_t t, hpdftbl_text_align_t align);
@@ -794,46 +794,46 @@ int
 hpdftbl_use_header(hpdftbl_t t, int use);
 
 int
-hpdftbl_set_label_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
+hpdftbl_set_label_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
 
 int
-hpdftbl_set_row_content_style(hpdftbl_t t, size_t r, char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+hpdftbl_set_row_content_style(hpdftbl_t t, size_t r, const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                               HPDF_RGBColor background);
 
 int
-hpdftbl_set_col_content_style(hpdftbl_t t, size_t c, char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+hpdftbl_set_col_content_style(hpdftbl_t t, size_t c, const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                               HPDF_RGBColor background);
 
 int
-hpdftbl_set_content_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
+hpdftbl_set_content_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
 
 int
-hpdftbl_set_cell_content_style(hpdftbl_t t, size_t r, size_t c, char *font, HPDF_REAL fsize, HPDF_RGBColor color,
+hpdftbl_set_cell_content_style(hpdftbl_t t, size_t r, size_t c, const char *font, HPDF_REAL fsize, HPDF_RGBColor color,
                                HPDF_RGBColor background);
 
 int
-hpdftbl_set_title_style(hpdftbl_t t, char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
+hpdftbl_set_title_style(hpdftbl_t t, const char *font, HPDF_REAL fsize, HPDF_RGBColor color, HPDF_RGBColor background);
 
 /*
  * Table content handling
  */
 int
-hpdftbl_set_cell(hpdftbl_t t, size_t r, size_t c, char *label, char *content);
+hpdftbl_set_cell(hpdftbl_t t, size_t r, size_t c, const char *label, const char *content);
 
 int
 hpdftbl_set_tag(hpdftbl_t t, void *tag);
 
 int
-hpdftbl_set_title(hpdftbl_t t, char *title);
+hpdftbl_set_title(hpdftbl_t t, const char *title);
 
 int
 hpdftbl_set_title_halign(hpdftbl_t t, hpdftbl_text_align_t align);
 
 int
-hpdftbl_set_labels(hpdftbl_t t, char **labels);
+hpdftbl_set_labels(hpdftbl_t t, const char **labels);
 
 int
-hpdftbl_set_content(hpdftbl_t t, char **content);
+hpdftbl_set_content(hpdftbl_t t, const char **content);
 
 /*
  * Table callback functions
@@ -870,10 +870,10 @@ hpdftbl_set_post_cb(hpdftbl_t t, hpdftbl_callback_t cb);
  * Text encoding
  */
 void
-hpdftbl_set_text_encoding(char *target, char *source);
+hpdftbl_set_text_encoding(const char *target, const char *source);
 
 int
-hpdftbl_encoding_text_out(HPDF_Page page, HPDF_REAL xpos, HPDF_REAL ypos, char *text);
+hpdftbl_encoding_text_out(HPDF_Page page, HPDF_REAL xpos, HPDF_REAL ypos, const char *text);
 
 /*
  * Misc utility and widget functions
@@ -915,7 +915,7 @@ hpdftbl_widget_strength_meter(HPDF_Doc doc, HPDF_Page page,
                               size_t num_segments, HPDF_RGBColor on_color, size_t num_on_segments);
 
 int
-hpdftbl_stroke_pdfdoc(HPDF_Doc pdf_doc, char *file);
+hpdftbl_stroke_pdfdoc(HPDF_Doc pdf_doc, const char *file);
 
 #ifdef HAVE_LIBJANSSON
 
