@@ -12,7 +12,6 @@ compile
 depcomp
 install-sh
 missing
-config.*
 autom4te.cache
 *~
 **/.deps
